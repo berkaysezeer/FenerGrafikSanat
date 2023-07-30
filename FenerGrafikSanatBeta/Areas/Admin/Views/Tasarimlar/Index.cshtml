@@ -1,0 +1,58 @@
+﻿@model List<FenerGrafikSanatBeta.Models.Tasarim>
+@{
+    ViewBag.Title = "Tasarımlar";
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Tasarımlar</h3>
+    </div>
+    <div class="card-body">
+        <a href="@Url.Action("Yeni","Tasarimlar")" class="btn btn-primary btn-block mb-3">
+            <i class="fas fa-plus"></i>
+            Tasarım Ekle
+        </a>
+
+        <table data-table="true" data-table-sort-column="0" data-table-sort-order="desc" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th class="turkce">Tasarim Adı</th>
+                    <th>Tasarımcı</th>
+                    <th>Ürün Görseli</th>
+                    <th class="turkce">Kategori</th>
+                    <th class="turkce">Boyut</th>
+                    <th class="turkce">Çözünürlük</th>
+                    <th class="turkce">İndirilme Sayısı</th>
+                    <th class="turkce">Tarih</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tasarim in Model)
+                {
+                    <tr>
+                        <td>@tasarim.Id</td>
+                        <td>@tasarim.TasarimAdi</td>
+                        <td>@tasarim.TasarimciAdSoyad</td>
+                        <td>
+                            <img src="@Url.OnizlemeTasarimResim(tasarim.ResimYolu)" height="50" />
+                        </td>
+                        <td>@tasarim.Kategori.KategoriAd</td>
+                        <td>@tasarim.TasarimBoyut kB</td>
+                        <td>@tasarim.TasarimCozunurluk</td>
+                        <td>@tasarim.IndirilmeAdet</td>
+                        <td>@tasarim.YuklenmeTarihi</td>
+                        <td>
+                            <a href="@Url.Action("Duzenle",new { id=tasarim.Id})" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn btn-danger btn-sm" data-delete-id="@tasarim.Id" data-delete-name="@tasarim.TasarimAdi" data-delete-action="@Url.Action("Sil")"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@Html.Partial("_DeleteModalPartial")

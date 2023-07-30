@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="tr" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <title>FGS - @ViewBag.Title</title>
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/Areas/Admin/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/bootstrap/bootstrap.min.css">
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/plugins/themify/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Content/plugins/counto/animate.css">
+    <link rel="stylesheet" href="~/Content/plugins/aos/aos.css">
+    <link rel="stylesheet" href="~/Content/plugins/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="~/Content/plugins/animated-text/animated-text.css">
+    <link href="~/Areas/Admin/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/cookie/cookiealert.css" rel="stylesheet" />
+
+    <!-- Main Stylesheet -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/ErrorStyle.css" rel="stylesheet" />
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/img/fav.ico" type="image/x-icon" />
+
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <!-- Navigation Start -->
+    <!-- Header Start -->
+
+    <nav class="navbar navbar-expand-lg fixed-top  main-nav mb-5" id="navbar" style="background-color:#fff">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Anasayfa")">
+                <img src="~/img/logo.png" alt="" class="img-fluid">
+            </a>
+
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-align-justify"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample09">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item  active">
+                        <a class="nav-link" href="@Url.Action("Index", "Anasayfa")">Ana Sayfa</a>
+                    </li>
+
+                    <li class="nav-item">@Html.RouteLink("Galeri", "GaleriDefault", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Hakkimizda")">Hakkımızda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Iletisim")">İletişim</a></li>
+
+                    @Html.Partial("_LoginPartial")
+
+                    @if (User.IsInRole("admin"))
+                    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle navbarYonetimClick" href="#" id="dropdownYonetim" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Yönetim</a>
+            <ul class="dropdown-menu dmYonetim" aria-labelledby="dropdownYonetim">
+
+                <li><a class="dropdown-item" href="@Url.Action("Index", "Kategoriler",new { area="Admin"})"><i class="fas fa-table mr-1"></i>Kategoriler</a></li>
+                <li><a class="dropdown-item" href="@Url.Action("Index", "Tasarimlar",new { area="Admin"})"><i class="fas fa-file-alt mr-1"></i>Tasarımlar</a></li>
+                <li><a class="dropdown-item" href="@Url.Action("Index", "Yorumlar",new { area="Admin"})"><i class="fas fa-comment mr-1"></i>Yorumlar</a></li>
+
+
+                @*<li>@Html.ActionLink("Kategoriler", "Index", "Kategoriler", new { area = "Admin" }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("Tasarımlar", "Index", "Tasarimlar", new { area = "Admin" }, new { @class = "dropdown-item" })</li>*@
+
+            </ul>
+        </li>}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <a href="#" id="goTop"><i class="ti-arrow-up" style="font-size:15px;"></i></a>
+
+    <!-- START Bootstrap-Cookie-Alert -->
+    <div class="alert text-center cookiealert" role="alert">
+        <b>Web sitemizde en iyi deneyimi yaşamanızı sağlamak için çerezleri kullanıyoruz.</b> <a href="@Url.Action("Index", "Cerezler")">Daha fazlası için</a>
+        <button type="button" class="btn btn-primary btn-sm acceptcookies">
+            Onay
+        </button>
+    </div>
+    <!-- END Bootstrap-Cookie-Alert -->
+    <!-- Header Close -->
+    <!-- Navigation ENd -->
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <section class="footer mt-5 mt-auto">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-6">
+                    <p class="mb-0">Copyrights © 2015 <a href="https://www.fgsanat.com" class="text-white">Fener Grafik Sanat</a></p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="widget footer-widget text-lg-right mt-5 mt-lg-0">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item">
+                                <a href="https://www.instagram.com/fgsanat" target="_blank"><i class="ti-instagram mr-3"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/fgsanat" target="_blank"><i class="ti-facebook mr-3"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://twitter.com/fgsanat" target="_blank"><i class="ti-twitter-alt mr-3"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="~/Content/plugins/jQuery/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/messages_tr.js"></script>
+    <!-- Bootstrap JS -->
+    @*<script src="~/Content/plugins/bootstrap/bootstrap.min.js"></script>*@
+    <script src="~/Areas/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/plugins/aos/aos.js"></script>
+    <script src="~/Content/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/Content/plugins/shuffle/shuffle.min.js"></script>
+    <script src="~/Content/plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="~/Content/plugins/animated-text/animated-text.js"></script>
+    <script src="~/Content/plugins/counto/apear.js"></script>
+    <script src="~/Content/plugins/counto/counTo.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/turkish-string.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Areas/Admin/plugins/toastr/toastr.min.js"></script>
+    <script src="~/Content/plugins/cookie/cookiealert.js"></script>
+    <!-- Main Script -->
+    <script src="~/Content/js/script.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+
+
+
+    <script>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr.success('@(TempData["SuccessMessage"])');
+            </text>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr.error('@(TempData["ErrorMessage"])');
+
+            </text>
+        }
+
+
+    </script>
+    @RenderSection("scripts", false)
+
+
+
+
+</body>
+</html>
+

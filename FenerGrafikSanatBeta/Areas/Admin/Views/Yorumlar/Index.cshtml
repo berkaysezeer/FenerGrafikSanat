@@ -1,0 +1,96 @@
+﻿@model List<Yorum>
+@{
+    ViewBag.Title = "Yorumlar";
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Yorumlar</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table data-table="true" data-table-sort-column="0" data-table-sort-order="desc" class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>İçerik</th>
+                    <th>Kullanıcı</th>
+                    <th>Tasarım</th>
+                    <th>Tarih</th>
+                    <th>Yayında mı?</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>
+                            @item.Icerik
+                            @if (item.Parent != null)
+                            {
+                                <br />
+                                <small>#@item.Parent.Id Alt Yorum</small>
+                            }
+                        </td>
+                        <td>@item.Kullanici.UserName</td>
+                        <td><a  target="_blank" href="@Url.Action("Index", "Tasarim", new { area = "", id = item.TasarimId, slug = item.Tasarim.Slug }) ">@item.Tasarim.TasarimAdi</a></td>
+                        <td>@item.OlusturulmaTarihi.Value</td>
+                        <td>
+                            @Html.CheckBox("YayindaMi", item.Durum == YorumDurumu.Yayinda, new
+                            {
+                               data_bootstrap_switch = "",
+                               data_off_color = "danger",
+                               data_on_color = "success",
+                               data_off_text = "NO",
+                               data_on_text = "YES",
+                               data_comment_id = item.Id
+                            })
+                        </td>
+                        <td>
+                            @*<a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-info mb-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>*@
+                            <a href="#" class="btn btn-danger" data-delete-id="@item.Id" data-delete-name="Yorum #@item.Id" data-delete-action="@Url.Action("Sil")">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    @Html.Partial("_DeleteModalPartial")
+
+
+    @section scripts {
+        <script>
+    $("input[data-bootstrap-switch]").each(function () {
+
+        var state = $(this).prop('checked');
+        var checkbox = this;
+
+        $(this).bootstrapSwitch({
+            state: state,
+            onSwitchChange: function (event, state) {
+
+                var isPublished = state;
+                var commentId = $(this).data("comment-id");
+
+                $.post("@Url.Action("DurumDegistir")", { id: commentId, isPublished: isPublished }, function (data) {
+                    // succesful
+                }).fail(function (xhr, status, error) {
+                    // error: change back to old state before the event
+                    $(checkbox).bootstrapSwitch("state", !state, true);
+                });
+            }
+        });
+    });
+        </script>
+    }

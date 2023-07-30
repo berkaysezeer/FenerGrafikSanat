@@ -1,0 +1,36 @@
+﻿@model HomeIndexViewModel
+
+@foreach (var tasarim in Model.Tasarimlar)
+{
+    <div class="col-lg-3 col-6 mb-4">
+        <div class="position-relative inner-box">
+            <a class="custom-overlay-a" href="@Url.Action("Index", "Tasarim", new { id = tasarim.Id, slug = tasarim.Slug })">
+                <div class="image position-relative ">
+                    <img src="@Url.OnizlemeTasarimResim(tasarim.ResimYolu)" alt="@tasarim.TasarimAdi" class="img-fluid w-100 d-block">
+                    <div class="overlay-box">
+                        <div class="overlay-inner">
+
+                            <h5 class="mb-0 custom-overlay-h5" title="@tasarim.TasarimAdi">
+                                @{
+                                    string tasarimAdi = tasarim.TasarimAdi;
+                                }
+
+                                @if (tasarim.TasarimAdi.Length > 30)
+                                {
+                                    var tmp = tasarimAdi.Substring(0, 30);
+                                    if (tmp.LastIndexOf(' ') > 0)
+                                    {
+                                        tasarimAdi = tmp.Substring(0, tmp.LastIndexOf(' ')) + "...";
+                                    }
+                                }
+                                @tasarimAdi
+                            </h5>
+                            <p class="custom-overlay-p">@tasarim.Kategori.KategoriAd</p>
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+}

@@ -1,0 +1,57 @@
+﻿@model Eposta
+@{
+    ViewBag.Title = "İletişim";
+}
+
+<div style="margin-top:50px;">
+    <section class="contact section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5 contact-title">
+                        <h2>İletişim</h2>
+                    </div>
+
+                    @using (Html.BeginForm("Index", "Iletisim", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @id = "contact-form", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken();
+
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group mb-3">
+                                    @Html.TextBoxFor(x => x.AdSoyad, new { @class = "form-control", @name = "AdSoyad", @placeholder = "Ad Soyad", @type = "text" })
+                                    @Html.ValidationMessageFor(x => x.AdSoyad, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mb-3">
+                                    @Html.TextBoxFor(x => x.Konu, new { @class = "form-control", @name = "Konu", @placeholder = "Konu Başlığı", @type = "text" })
+                                    @Html.ValidationMessageFor(x => x.Konu, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                @Html.TextBoxFor(x => x.EpostaAdresi, new { @class = "form-control", @name = "EpostaAdresi", @placeholder = "E-posta Adresi", @type = "email" })
+                                @Html.ValidationMessageFor(x => x.EpostaAdresi, null, new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group-2 mb-4 mt-3">
+                                    @Html.TextAreaFor(x => x.Mesaj, new { @class = "form-control", @rows = "6", @name = "Mesaj", @placeholder = "Mesajınız" })
+                                    @Html.ValidationMessageFor(x => x.Mesaj, null, new { @class = "text-danger" })
+                                </div>
+
+                                <div class="text-center">
+                                    @*<div class="g-recaptcha mb-3" data-sitekey="6LfoygAVAAAAAPOlPcrhbpM6ClS8SDrhRG1Z6ssl"></div>*@
+                                    @TempData["Message"]
+                                    <button class="btn btn-main btn-block" name="submit" type="submit">Gönder</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

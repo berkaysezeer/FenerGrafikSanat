@@ -1,0 +1,48 @@
+﻿@model FavoriIndexViewModel
+@{
+    ViewBag.Title = "Favoriler";
+}
+
+<div style="margin-top:110px;">
+    <section class="section-sm">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5 contact-title">
+                        <h2>Favorilerim</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="portfolio">
+        <div id="Tasarimlar" class="row portfolio-gallery">
+            @Html.Partial("~/Views/Favoriler/_FavorilerPartial.cshtml", Model)
+        </div>
+    </div>
+
+    @if (Model.FavoriAdet > 12)
+    {
+        <div class="mb-5">
+            <div class="text-center font-weight-bold">
+                <p>Devamı İçin Lütfen Aşağı Doğru Kaydırın</p>
+            </div>
+
+            <div class="loading d-none">
+                <div class="d-flex h-100">
+                    <div class="d-flex justify-content-center align-self-center w-100">
+                        <div class="loader mr-2">
+                        </div>
+                        <div>
+                            <p>Tasarımlar Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+

@@ -1,0 +1,113 @@
+﻿@model HomeIndexViewModel
+@{
+    ViewBag.Title = "Galeri";
+}
+
+<div style="margin-top:110px;">
+    <section class="section-sm">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5 contact-title">
+                        <h2>Galeri</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="portfolio">
+        <div class="row mb-3 justify-content-center">
+            <div class="col-10 text-center ">
+                <div class="btn-group btn-group-toggle">
+                    <label class="btnKat activelabel">
+                        @Html.RouteLink("Tüm Tasarımlar", "GaleriDefault")
+                    </label>
+
+                    @foreach (var kategori in Model.Kategoriler)
+                    {
+                        <label class="btnKat">
+                            <a href="@Url.Action("Index", "Galeri", new { kid = kategori.Id, slug=kategori.Slug})">@kategori.KategoriAd</a>
+                        </label>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div id="Tasarimlar" class="row portfolio-gallery">
+            @Html.Partial("~/Views/Galeri/_GaleriPartial.cshtml", Model)
+        </div>
+
+        @if (Model.ToplamTasarimAdet > 8)
+        {
+            <div class="text-center font-weight-bold">
+                <p>Devamı İçin Lütfen Aşağı Doğru Kaydırın</p>
+            </div>
+
+            <div class="loading d-none">
+                <div class="d-flex h-100">
+                    <div class="d-flex justify-content-center align-self-center w-100">
+                        <div class="loader mr-2">
+                        </div>
+                        <div>
+                            <p>Tasarımlar Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <input type="hidden" value="@TempData["kategoriId"]" id="kategoriId" />
+    </div>
+</div>
+
+
+
+@helper AktifMi(int kategoriId)
+{
+    var kid = Request.QueryString["kid"];
+    if (kategoriId.ToString() == kid)
+    {
+        @("activelink")
+    }
+    else if (kategoriId == 0 && string.IsNullOrEmpty(kid))
+    {
+        <text>activelink</text>
+    }
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+        var SayfaSayisi = 1;
+        var SayfaPost = true;
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                var kategoriId = $("#kategoriId").val();
+                if (SayfaPost) {
+                    $.ajax({
+                        url: '/Galeri/',
+                        data: { sayfano: SayfaSayisi, kid: kategoriId },
+                        success: function (data) {
+                            if ($.trim(data) == '') {
+                                SayfaPost = false;
+                            } else {
+                                $("#Tasarimlar").append(data);
+                                SayfaSayisi++;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).ajaxStart(function () {
+            $(".loading").removeClass("d-none");
+        });
+
+        $(document).ajaxStop(function () {
+            $(".loading").addClass("d-none");
+        });
+    </script>
+}

@@ -1,0 +1,44 @@
+﻿@model DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="container-fluid">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            @SmallBox(Model.KategoriSayisi.ToString(), "Kategoriler", Url.Action("Index", "Kategoriler"), "bg-info", "fas fa-table")
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            @SmallBox(Model.TasarimSayisi.ToString(), "Tasarımlar", Url.Action("Index", "Tasarimlar"), "bg-success", "fas fa-file-alt")
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            @SmallBox(Model.YorumSayisi.ToString(), "Yorumlar", Url.Action("Index", "Yorumlar"), "bg-light", "fas fa-comment")
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            @SmallBox(Model.KullaniciSayisi.ToString(), "Kullanıcılar", "#", "bg-warning", "fas fa-users")
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+</div>
+
+@helper SmallBox(string title, string description, string link, string boxClass, string iconClass)
+{
+    <!-- small box -->
+    <div class="small-box @boxClass">
+        <div class="inner">
+            <h3>@title</h3>
+
+            <p>@description</p>
+        </div>
+        <div class="icon">
+            <i class="@iconClass"></i>
+        </div>
+        <a href="@link" class="small-box-footer">Daha Fazlası İçin <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+
+}

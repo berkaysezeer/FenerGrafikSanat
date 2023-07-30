@@ -1,0 +1,46 @@
+﻿@model List<FenerGrafikSanatBeta.Models.Kategori>
+@{
+    ViewBag.Title = "Kategoriler";
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Kategorileri Yönet</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <a href="@Url.Action("Yeni")" class="btn btn-primary btn-block mb-3">
+            <i class="fas fa-plus"></i>
+            Kategori Ekle
+        </a>
+        <table data-table="true" data-table-sort-column="0" data-table-sort-order="desc" class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Kategori</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.KategoriAd</td>
+                        <td>
+                            <a href="@Url.Action("Duzenle",new { id=item.Id})" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn btn-danger btn-sm" data-delete-id="@item.Id" data-delete-name="@item.KategoriAd" data-delete-action="@Url.Action("Sil")"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+@Html.Partial("_DeleteModalPartial")

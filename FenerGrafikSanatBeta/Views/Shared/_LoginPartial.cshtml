@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Hesap", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (User.IsInRole("admin"))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle navbarKullaniciClick" href="#" id="dropdownKullanici" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
+                <ul class="dropdown-menu dmKullanici" aria-labelledby="dropdownKullanici">
+                    <li><a class="dropdown-item" href="@Url.Action("Index", "Favoriler")"><i class="fas fa-heart mr-1"></i>Favoriler</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Index", "HesapYonetim")"><i class="fas fa-cog mr-1"></i>Hesabı Yönet</a></li>
+                    <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()"><i class="fas fa-sign-out-alt mr-1"></i>Çıkış Yap</a></li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle navbarYonetimClick" href="#" id="dropdownYonetim" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
+                <ul class="dropdown-menu dmYonetim" aria-labelledby="dropdownYonetim">
+                    <li><a class="dropdown-item" href="@Url.Action("Index", "Favoriler")"> <i class="fas fa-heart mr-1"></i>Favoriler</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Index", "HesapYonetim")"><i class="fas fa-cog mr-1"></i>Hesabı Yönet</a></li>
+                    <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Çıkış Yap</a></li>
+                </ul>
+            </li>
+        }
+    }
+}
+else
+{
+    <li class="nav-item">@Html.ActionLink("Kayıt Ol", "Kayit", "Hesap", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })</li>
+    <li class="nav-item">@Html.ActionLink("Giriş", "Giris", "Hesap", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
+}

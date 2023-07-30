@@ -1,0 +1,63 @@
+﻿@model FenerGrafikSanatBeta.Models.IndexViewModel
+@{
+    ViewBag.Title = "Profil Yönetim";
+}
+
+
+
+
+<div style="margin-top:50px;" ">
+    <section class="contact section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5 contact-title">
+                        <h2>Hesap Ayarları</h2>
+                    </div>
+
+                    <div id="loginForm" style="">
+                        <div class="" >
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5>Kullanıcı Adı</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>@User.Identity.Name</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5>E-Posta</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>@User.Identity.GetEmailAdress()</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5>Şifre</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    @if (Model.HasPassword)
+                                    {
+                                        @Html.ActionLink("Şifreni Değiştir", "SifreDegistir")
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Create", "SetPassword")
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+

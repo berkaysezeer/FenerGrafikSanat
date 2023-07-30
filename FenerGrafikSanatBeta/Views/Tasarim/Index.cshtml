@@ -1,0 +1,273 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@model TasarimViewModel
+@{
+    ViewBag.Title = Model.Tasarim.TasarimAdi;
+}
+
+<div style="margin-top:50px;">
+    <section class="section portfolio-single">
+        <div class="container">
+
+
+            <div class="row justify-content-center">
+                <div class="col-lg-4 mb-3">
+                    <img src="@Url.TasarimResim(Model.Tasarim.ResimYolu)" alt="@Model.Tasarim.TasarimAdi" class="img-fluid w-100" />
+                </div>
+                <div class="col-lg-8">
+                    <div class="project-info">
+                        <h3 class="mb-4">@Model.Tasarim.TasarimAdi</h3>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="ti-user" style="color:#ffd32a;"></i>
+                                <h4 class="my-3">Tasarımcı</h4>
+                                <p class="font-weight-bold">@Model.Tasarim.TasarimciAdSoyad</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="ti-menu" style="color:#ffd32a;"></i>
+                                <h4 class="my-3">Kategori</h4>
+                                <p class="font-weight-bold">@Model.Tasarim.Kategori.KategoriAd</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="ti-image" style="color:#ffd32a;"></i>
+                                <h4 class="my-3">Çözünürlük</h4>
+                                <p class="font-weight-bold" style="font-size:20px;color:#192a56;">@Model.Tasarim.TasarimCozunurluk</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="ti-download" style="color:#ffd32a;"></i>
+                                <h4 class="my-3">İndirilme Sayısı</h4>
+                                <p id="indirilmeAdetText" class="font-weight-bold" style="font-size:20px;color:#192a56;">
+                                    @{
+                                        int indirilmeAdet = Model.Tasarim.IndirilmeAdet;
+                                    }
+                                    @indirilmeAdet
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        @using (Html.BeginForm("Indir", "Tasarim", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(x => x.Tasarim.Id)
+
+                            <button id="btnIndir" type="submit" class="btn btn-main mr-3"><i class="fas fa-file-download mr-1"></i>İndir</button>
+                        }
+                    </div>
+                    <div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+
+
+
+                            using (Html.BeginForm("FavorilereEkle", "Tasarim", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(x => x.Tasarim.Id)
+
+                                if (!Model.Kullanici.KullaniciTasarimlar.Any(x => x.TasarimId == Model.Tasarim.Id))
+                                {
+                                    <button id="favorilereEkle" type="submit" class="btn btn-main mt-2" style="background-color:crimson;"><i class="far fa-heart mr-1"></i>Favorilere Ekle</button>
+                                }
+                                else
+                                {
+                                    <button id="favorilereEkle" type="submit" class="btn btn-main mt-2" style="background-color:crimson;">
+                                        <i class="fas fa-heart mr-1"></i>Favorilerden Çıkar
+                                    </button>
+                                }
+
+                            }
+                        }
+
+                    </div>
+                    @*<div class="mt-2">
+                            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="true">Tweet</a>
+                        </div>*@
+                </div>
+            </div>
+
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card my-4" id="yorum-yap">
+                    <h5 class="card-header">Bir Yorum Bırak</h5>
+                    <div class="card-body">
+                        @if (Request.QueryString["commentSuccess"] == "True" && !User.IsInRole("admin"))
+                        {
+
+                            <div id="alertYorum" class="alert alert-info alert-dismissible fade show" role="alert">
+                                Yorumun yönetici onayladıktan sonra yayınlanacak.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+
+                        @if (Request.IsAuthenticated)
+                        {
+                            @Html.Partial("_YorumFormPartial", Model.YorumViewModel)
+                        }
+                        else
+                        {
+                            <p class="text-center mt-3">
+                                Yorum yapmak için
+                                @Html.ActionLink("Giriş Yap", "Giris", "Hesap", new { returnUrl = Request.Url.AbsolutePath }, null)
+                                ya da
+                                @Html.ActionLink("Kayıt Ol", "Kayit", "Hesap")
+
+
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                <div id="comments">
+                    @foreach (var yorum in Model.Tasarim.Yorumlar
+                                       .Where(x => x.Durum == FenerGrafikSanatBeta.Enums.YorumDurumu.Yayinda && x.ParentId == null)
+                                       .OrderByDescending(x => x.OlusturulmaTarihi))
+                    {
+                        <!-- Single Comment -->
+                        <div class="media mb-3">
+                            @if (yorum.Kullanici.Roles.Any(x => x.RoleId == TempData["roleId"].ToString()))
+                            {
+                                <img class="d-flex mr-3 rounded-circle" src="~/img/mainlogo.png" alt="" width="50" height="50">
+                            }
+                            else
+                            {
+                                <img class="d-flex mr-3 rounded-circle" src="~/img/profile.png" alt="" width="50" height="50">
+                            }
+                            <div class="media-body">
+                                <h5 class="mt-0">
+                                    @yorum.Kullanici.UserName
+                                    @if (yorum.Kullanici.Roles.Any(x => x.RoleId == TempData["roleId"].ToString()))
+                                    {
+                                        <small><span class="badge badge-primary">Yönetici</span></small>
+                                    }
+
+                                </h5>
+                                @yorum.Icerik <br />
+                                @if (Request.IsAuthenticated)
+                                {
+                                    <a href="#" class="reply-button small" data-comment-id="@yorum.Id">Yanıtla</a>
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Yanıtla", "Giris", "Hesap", new { returnUrl = Request.Url.AbsolutePath }, null)
+                                }
+
+                                <div class="reply-form-wrapper"></div>
+
+                                <div class="mt-2">
+                                    @foreach (var altyorum in yorum.Children
+                                                                       .Where(x => x.Durum == FenerGrafikSanatBeta.Enums.YorumDurumu.Yayinda)
+                                                                       .OrderBy(x => x.OlusturulmaTarihi))
+                                    {
+                                        <!-- Single Comment -->
+                                        <div class="media mb-3">
+                                            @if (altyorum.Kullanici.Roles.Any(x => x.RoleId == TempData["roleId"].ToString()))
+                                            {
+                                                <img class="d-flex mr-3 rounded-circle" src="~/img/mainlogo.png" alt="" width="50" height="50">
+                                            }
+                                            else
+                                            {
+                                                <img class="d-flex mr-3 rounded-circle" src="~/img/profile.png" alt="" width="50" height="50">
+                                            }
+
+                                            <div class="media-body">
+                                                <h5 class="mt-0">
+                                                    @altyorum.Kullanici.UserName
+                                                    @if (altyorum.Kullanici.Roles.Any(x => x.RoleId == TempData["roleId"].ToString()))
+                                                    {
+                                                        <small><span class="badge badge-primary">Mekanın Sahibi</span></small>
+                                                    }
+                                                </h5>
+                                                @altyorum.Icerik
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <script>
+        setTimeout(function () {
+            if (location.hash == "#yorum-yap") {
+                window.scrollTo(0, $("#yorum-yap").offset().top - 65);
+            }
+        }, 50);
+
+        setTimeout(function () {
+            if (location.hash == "#comments") {
+                window.scrollTo(0, $("#comments").offset().top - 65);
+            }
+        }, 50);
+
+        $(".reply-button").click(function (event) {
+            event.preventDefault();
+
+            if ($(this).next(".reply-form-wrapper").html()) {
+                $(this).next(".reply-form-wrapper").html("");
+                return;
+            }
+
+            var commentId = $(this).data("comment-id");
+            var frm = $("#yorum-yap form").clone();
+
+            // change style of the clone
+            //frm.addClass("d-flex justify-content-end");
+            //frm.find(".form-group").addClass("flex-fill mb-0");
+            //frm.find("button").addClass("btn-sm align-self-end ml-1");
+            frm.find("textarea").attr("rows", "2");
+
+            frm.find("#ParentId").val(commentId);
+            $(".reply-form-wrapper").html("");
+            $(this).next(".reply-form-wrapper").html(frm);
+        });
+
+        $(document).ready(function () {
+
+            var adet =@Model.Tasarim.IndirilmeAdet;
+
+            //$("#btnIndir").click(function () {
+            //    adet++;
+            //    $("#indirilmeAdetText").text("");
+            //    $("#indirilmeAdetText").text(adet);
+            //});
+
+            $("#btnIndir").click(function () {
+                setTimeout(function () {
+                    adet++;
+                    $("#indirilmeAdetText").text("");
+                    $("#indirilmeAdetText").text(adet);
+                }, 2500);
+        });
+
+        });
+
+        $("#textareaYorum").click(function () {
+            $("#alertYorum").addClass("d-none");
+        });
+
+    </script>
+}
